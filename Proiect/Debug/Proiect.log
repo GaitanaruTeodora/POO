@@ -1,17 +1,17 @@
 ﻿  Source.cpp
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(151,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(227,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(473,7): warning C4101: 'lungime': unreferenced local variable
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1229,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1241,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1254,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1359,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1370,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1385,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1561,24): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1613,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1692,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1702,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1934,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Clase.h(1945,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(152,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(228,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(474,7): warning C4101: 'lungime': unreferenced local variable
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1230,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1242,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1255,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1360,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1371,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1386,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1562,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1614,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1693,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1703,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1935,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\CorpClase.h(1946,23): warning C4018: '<': signed/unsigned mismatch
   Proiect.vcxproj -> C:\Users\TEO\Desktop\Proiect_POO\POO\Proiect\Debug\Proiect.exe

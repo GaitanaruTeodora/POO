@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 #include <string>
-#include "Clase.h"
+#include "CorpClase.h"
 
 using namespace std;
 
