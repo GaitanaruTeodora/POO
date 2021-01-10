@@ -1,0 +1,2 @@
+CREATE TABLE PERSOANA ( ( ID , 2, 22, D ) , (NUME , 3 , 3 , D ) ) ;
+CREATE TABLE STUDENT ( ( ID , 2, 22, D )  ) ;

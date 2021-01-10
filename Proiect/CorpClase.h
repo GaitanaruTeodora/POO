@@ -3,7 +3,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 #include <string>
-
+#include <fstream>
+#include <cstdio>
 using namespace std;
 
 enum tipColoana { tip_text = 1, tip_integer = 2, tip_float = 3 };
@@ -134,6 +135,10 @@ public:
 			delete[]this->valoareImplicita;
 		}
 	}
+	char* getValoareImplicita()
+	{
+		return valoareImplicita;
+	}
 	char* setValoareImplicita(char* val)
 	{
 		valoareImplicita = new char[strlen(val) + 1];
@@ -142,6 +147,7 @@ public:
 	}
 	void setNumeColoana(char* nume_coloana)
 	{
+
 		this->nume_coloana = new char[strlen(nume_coloana) + 1];
 		strcpy_s(this->nume_coloana, strlen(nume_coloana) + 1, nume_coloana);
 	}
@@ -189,11 +195,33 @@ public:
 
 		if (isdigit(tip[0]) && strlen(tip) == 1)
 		{
+			if (strcmp("2", tip) == 0)
+			{
+				tipColoana  tipN = (tipColoana)2;
+				this->tip = tipN;
 
-			tipColoana  tipN = (tipColoana)int(tip[0]);
-			this->tip = tipN;
+				return true;
+			}
+			else if (strcmp("1", tip) == 0)
+			{
+				tipColoana  tipN = (tipColoana)1;
+				this->tip = tipN;
 
-			return true;
+				return true;
+			}
+			else if (strcmp("0", tip) == 0)
+			{
+				tipColoana  tipN = (tipColoana)0;
+				this->tip = tipN;
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+
 		}
 
 		return false;
@@ -277,7 +305,7 @@ istream& operator>>(istream& in, Coloana& c)
 	if (strlen(x) == 1 && isdigit(x[0]))
 	{
 		int n = (int)(x[0]);
-		cout << "n " << n;
+
 		if (n > 0 && n <= 3)
 		{
 			tipColoana tipNou = (tipColoana)(x[0]);
@@ -328,6 +356,23 @@ private:
 
 public:
 
+	void setNrColoane(int nr_coloane)
+	{
+		this->nr_coloane = nr_coloane;
+	}
+	void setElemente(char** elemente, int nr_coloane)
+	{
+		this->nr_coloane = nr_coloane;
+		delete[]this->elemente;
+
+		this->elemente = new char* [nr_coloane];
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			this->elemente[i] = new char[strlen(elemente[i]) + 1];
+			strcpy(this->elemente[i], elemente[i]);
+
+		}
+	}
 	Rand()
 	{
 		elemente = nullptr;
@@ -362,11 +407,13 @@ public:
 	Rand& operator = (const Rand& r)
 	{
 		this->nr_coloane = r.nr_coloane;
+		delete[]elemente;
 		this->elemente = new char* [nr_coloane];
 		for (int i = 0; i < nr_coloane; i++)
 		{
 			this->elemente[i] = new char[strlen(r.elemente[i]) + 1];
-			strcpy(this->elemente[i], r.elemente[i]);
+			strcpy_s(this->elemente[i], strlen(r.elemente[i]) + 1, r.elemente[i]);
+
 		}
 
 		return *this;
@@ -444,22 +491,27 @@ public:
 	{
 		return elemente[index];
 	}
-	void setElementPozitie(int index, string val)
+	Rand setElementPozitie(int index, string val)
 	{
-		char* x = new char[val.length()];
-		strcpy_s(x, val.length(), val.c_str());
+		/*cout << "Trebuie sa pui val " << val << endl;
+		cout << "in loc de " << elemente[index] << endl;*/
+		char* x = new char[val.length() + 1];
+		strcpy_s(x, val.length() + 1, val.c_str());
 		elemente[index] = new char[strlen(x) + 1];
 		strcpy_s(elemente[index], strlen(x) + 1, x);
+		/*cout << "acum e " << elemente[index] << endl;*/
+		return *this;
+
 	}
 
 	friend ostream& operator<<(ostream&, Rand);
 	friend istream& operator>>(istream&, Rand&);
-
+	friend ofstream& operator <<(ofstream&, Rand);
 };
 
 ostream& operator << (ostream& out, Rand r)
 {
-	cout << "Coloane : ";
+
 	for (int i = 0; i < r.getNrColoane(); i++)
 	{
 		cout << r.elemente[i] << " ";
@@ -467,6 +519,8 @@ ostream& operator << (ostream& out, Rand r)
 	cout << endl;
 	return out;
 }
+
+
 istream& operator >> (istream& in, Rand& r)
 {
 
@@ -550,6 +604,39 @@ public:
 		denumire_tabela = nullptr;
 
 	}
+	int verificaColoana(char* numeColoana)
+	{
+		int index = -1;
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			if (strcmp(coloane[i].getDenumire(), numeColoana) == 0)
+			{
+				index = i;
+			}
+		}
+		return index;
+	}
+	void select(char* numeColoana)
+	{
+		int index = -1;
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			if (strcmp(coloane[i].getDenumire(), numeColoana) == 0)
+			{
+				index = i;
+			}
+		}
+		if (index != -1)
+		{
+			cout << "Coloana : " << numeColoana << endl;
+			for (int i = 0; i < nr_randuri; i++)
+			{
+				cout << randuri[i].elementPozitie(index) << endl;
+
+			}
+		}
+
+	}
 	Tabela(char* denumire, int nr_coloane, Coloana* coloane) :numarMaximColoane(20)
 	{
 
@@ -606,6 +693,76 @@ public:
 		{
 			this->coloane[i] = t.coloane[i];
 		}
+	}
+	void serializare()
+	{
+		string den = denumire_tabela;
+		string d = "Detalii/" + den + ".bin";
+		char* x = new char[d.length() + 1];
+		strcpy(x, d.c_str());
+
+		if (remove(x) != 0)
+			cout << "";
+		else
+			cout << "";
+		ofstream f("Detalii/" + den + ".bin", ios::binary);
+
+		f.write((char*)&nr_randuri, sizeof(nr_randuri));
+		for (int i = 0; i < nr_randuri; i++)
+		{
+			for (int j = 0; j < randuri[i].getNrColoane(); j++)
+			{
+				int lenght = strlen(randuri[i].elementPozitie(j));
+				f.write((char*)&lenght, sizeof(lenght));
+				f.write((char*)randuri[i].elementPozitie(j), sizeof(randuri[i].elementPozitie(j)));
+				/*	cout << "am serializat" << randuri[i].elementPozitie(j) << endl;*/
+
+			}
+
+		}
+
+
+		f.close();
+	}
+	void deserializare()
+	{
+		string den = denumire_tabela;
+		ifstream f("Detalii/" + den + ".bin", ios::binary);
+
+		int length = 0;
+		f.read((char*)&nr_randuri, sizeof(nr_randuri));
+		//citirea se face in aceeasi ordina ca scrierea
+
+	/*	cout << "Deserializare nr randuri " << nr_randuri << endl;*/
+		randuri = new Rand[nr_randuri];
+		randuri->setNrColoane(nr_coloane);
+		/*cout << "Deserializare nr COLOANE " << nr_coloane << endl;*/
+
+
+		for (int i = 0; i < nr_randuri; i++)
+		{
+			char** el = new char* [nr_coloane];
+			int nr = 0;
+			for (int j = 0; j < nr_coloane; j++)
+			{
+				length = 0;
+				f.read((char*)&length, sizeof(length));
+				el[nr] = new char[length + 1];
+
+
+				f.read((char*)el[nr], sizeof(el[nr]));
+
+				nr++;
+			}
+
+			randuri[i].setElemente(el, nr_coloane);
+
+
+
+		}
+
+
+		f.close();
 	}
 	Tabela& operator = (const Tabela& t)
 	{
@@ -736,6 +893,10 @@ public:
 	{
 		return randuri[index];
 	}
+	void setRand(int index, Rand rand)
+	{
+		randuri[index] = rand;
+	}
 	Coloana getColoane(int index)
 	{
 		return coloane[index];
@@ -809,6 +970,7 @@ public:
 			}
 
 		}
+
 	}
 
 
@@ -841,23 +1003,34 @@ public:
 	void insereazaRand(Rand rand)
 	{
 
-		Rand* copie = randuri;
-		nr_randuri++;
+		Rand* copie = new Rand[nr_randuri];
+		copie = this->randuri;
+		this->nr_randuri = this->nr_randuri + 1;
 
-		delete[]randuri;
-		this->randuri = new Rand[nr_randuri];
-		if (nr_randuri == 1)
+		delete[]this->randuri;
+		this->randuri = new Rand[this->nr_randuri + 1];
+
+		if (this->nr_randuri == 1)
 		{
 			this->randuri[0] = rand;
+		}
+		else if (this->nr_randuri == 2)
+		{
+
+			this->randuri[0] = copie[0];
+
+			this->randuri[1] = rand;
+
 		}
 		else
 		{
 			for (int i = 0; i < nr_randuri - 1; i++)
 			{
-				this->randuri[i] = copie[i];
+				cout << copie[i] << endl;
 
 			}
-			this->randuri[nr_randuri - 1] = rand;
+
+			/*this->randuri[nr_randuri - 1] = rand;*/
 
 		}
 	}
@@ -867,14 +1040,78 @@ public:
 		Coloana* copie = coloane;
 		nr_coloane++;
 	}
-
+	friend ofstream& operator << (ofstream&, Tabela);
 	friend ostream& operator<<(ostream&, Tabela);
 	friend istream& operator>>(istream&, Tabela&);
-
+	friend ifstream& operator >>(ifstream&, Tabela&);
 };
 
 string Tabela::denumire_BD = "Database";
+ifstream& operator>>(ifstream& in, Tabela& t)
+{
+	string buffer, buffer1, buffer2, buffer3, buffer4;
+	in >> ws;
+	getline(in, buffer);
 
+	t.denumire_tabela = new char[buffer.length() + 1];
+	strcpy_s(t.denumire_tabela, buffer.length() + 1, buffer.c_str());
+
+	in >> ws;
+	getline(in, buffer);
+
+
+	t.nr_coloane = atoi(buffer.c_str());
+
+	t.coloane = new Coloana[t.nr_coloane];
+	for (int i = 0; i < t.nr_coloane; i++)
+	{
+		in >> ws;
+		getline(in, buffer1);
+
+		char* numeColoana = new char[buffer1.length() + 1];
+		strcpy_s(numeColoana, buffer1.length() + 1, buffer1.c_str());
+
+		t.coloane[i].setNumeColoana(numeColoana);
+
+		in >> ws;
+
+		getline(in, buffer2);
+
+		char* tipColoana = new char[buffer2.length() + 1];
+		strcpy(tipColoana, buffer2.c_str());
+		t.coloane[i].setTipColoana(tipColoana);
+		in >> ws;
+		getline(in, buffer3);
+
+		char* lungimeColoana = new char[buffer3.length() + 1];
+		strcpy(lungimeColoana, buffer3.c_str());
+		t.coloane[i].setLungimeColoana(lungimeColoana);
+		in >> ws;
+		getline(in, buffer4);
+
+		char* valoareImplicita = new char[buffer4.length() + 1];
+		strcpy(valoareImplicita, buffer4.c_str());
+		t.coloane[i].setValoareImplicita(valoareImplicita);
+
+
+	}
+	return in;
+}
+ofstream& operator << (ofstream& out, Tabela t)
+{
+	out << t.denumire_tabela << endl;
+	out << t.nr_coloane << endl;
+	for (int i = 0; i < t.nr_coloane; i++)
+	{
+		out << t.coloane[i].getDenumire() << endl;
+		out << t.coloane[i].getLungimeColoana() << endl;
+		out << t.coloane[i].getTipColoana() << endl;
+		out << t.coloane[i].getValoareImplicita() << endl;
+	}
+	out << t.nr_randuri << endl;
+
+	return out;
+}
 ostream& operator << (ostream& out, Tabela t)
 {
 	out << "Denumire tabela: " << t.denumire_tabela << endl;
@@ -890,10 +1127,15 @@ ostream& operator << (ostream& out, Tabela t)
 	}
 	else
 	{
-		out << "Randuri: ";
+		out << "Nr Randuri: " << t.nr_randuri << endl;
+		for (int i = 0; i < t.nr_coloane; i++)
+		{
+			out << t.coloane[i].getDenumire() << " ";
+		}
+		cout << endl;
 		for (int i = 0; i < t.nr_randuri; i++)
 		{
-			out << t.randuri[i] << " ";
+			out << t.randuri[i];
 		}
 
 	}
@@ -1073,6 +1315,12 @@ public:
 			strcpy(this->elemente[i], elemente[i]);
 		}
 	}
+	void incarcaTabele()
+	{
+		//deschidem fisierele cu detalii despre crearea tabellelor si cream fiecare tabel in parte.
+		  // deschidem fisierele cu descrieri si populam tabelele
+		  //actualizam vectorul de tabele
+	}
 
 	int tipComanda()
 	{
@@ -1089,7 +1337,8 @@ public:
 		string create = "CREATE";
 		string table = "TABLE";
 		string valoare = "";
-		if (ins == elemente[0] || del == elemente[0] || upd == elemente[0] || sel == elemente[0])
+		string imp = "IMPORT";
+		if (ins == elemente[0] || del == elemente[0] || upd == elemente[0] || sel == elemente[0] || imp == elemente[0])
 		{
 			return 0;
 		}
@@ -1174,7 +1423,7 @@ public:
 		for (int j = i; j < dim; j++)
 		{
 
-			cout << v[j] << endl;
+			//cout << v[j] << endl;
 			/*if (deschisa == v[j])
 			{
 
@@ -1533,7 +1782,7 @@ public:
 				{
 
 					char* x = strtok(elemente[i], egal);
-					cout << x;
+					/*	cout << x;*/
 					c[nr] = new char[strlen(egal)];
 					strcpy(c[nr], egal);
 					nr++;
@@ -2120,6 +2369,7 @@ public:
 		string ins = "INSERT";
 		string valoare = "";
 		string upd = "UPDATE";
+		string sel = "SELECT";
 		string del = "DELETE";
 		string into = "INTO";
 		string set = "SET";
@@ -2127,10 +2377,12 @@ public:
 		string table = "TABLE";
 		string create = "CREATE";
 		string from = "FROM";
+		string al = "ALL";
 		string wh = "WHERE";
 		string terminal = ";";
 		string virgula = ",";
 		string denumire;
+		string imp = "IMPORT";
 		char* elDefault = new char[8];
 		strcpy(elDefault, "default");
 		string parantezaDeschisa = "(";
@@ -2138,8 +2390,33 @@ public:
 		const char* lista[6] = { "INSERT","UPDATE","DELETE" };
 		bool ok = true;
 
-		if (dim > 5)
+		if (dim == 4)
 		{
+			if (imp == elemente[0] && terminal == elemente[3])
+			{
+				string nume_tabela = elemente[1];
+				string nume_fisier = elemente[2];
+				IMPORT(nume_tabela, nume_fisier);
+			}
+		}
+
+		else if (dim == 5)
+		{
+			if ((sel == elemente[0]) && (al == elemente[1]) && (from == elemente[2]) && (terminal == elemente[4]) && (dim == 5))
+			{
+
+				string numeTabel = elemente[3];
+				selectAll(numeTabel);
+			}
+			else
+			{
+				cout << "Comanda gresita";
+			}
+		}
+
+		else if (dim > 5)
+		{
+
 			if ((ins == elemente[0]) && (into == elemente[1]) && (values == elemente[3]) && terminal == elemente[dim - 1])
 			{
 				/*denumireTabel = new char[strlen(elemente[2]) + 1];*/
@@ -2205,8 +2482,36 @@ public:
 				denumireTabel = elemente[1];
 				numeColoana = elemente[3];
 				val1 = elemente[5];
-				val2 = elemente[6];
+				val2 = elemente[9];
 				UPDATE(denumireTabel, numeColoana, val1, val2);
+			}
+			else if ((sel == elemente[0]) && (parantezaDeschisa == elemente[1]) && (terminal == elemente[dim - 1]) && (from == elemente[dim - 3]) && (parantezaInchisa == elemente[dim - 4]))
+			{
+				string denTabela = elemente[dim - 2];
+				bool ver = true;
+				int nr_col = (dim - 4) / 2;
+
+				char** coloaneSelect = new char* [nr_col];
+				int nr = 0;
+				for (int i = 2; i < dim - 4; i++)
+				{
+					if (i % 2 == 1)
+					{
+						if (virgula != elemente[i])
+						{
+							ver = false;
+						}
+
+					}
+					else
+					{
+
+						coloaneSelect[nr] = new char[strlen(elemente[i]) + 1];
+						strcpy(coloaneSelect[nr], elemente[i]);
+						nr++;
+					}
+				}
+				SELECT(denTabela, coloaneSelect, nr);
 			}
 			else
 			{
@@ -2215,7 +2520,167 @@ public:
 		}
 		else
 		{
+
 			cout << "Comanda gresita";
+		}
+	}
+	void IMPORT(string denumireTabela, string numeFisier)
+	{
+		Tabela* vector_tabele = getVectorTabele();
+		int nr_tabele = getNrTabele();
+		bool ok = true;
+		bool gasit = false;
+
+
+		for (int i = 0; i < nr_tabele; i++)
+		{
+
+			if (denumireTabela == vector_tabele[i].getDenumire())
+			{
+				gasit = true;
+
+				ifstream ip(numeFisier);
+				if (!ip.is_open())
+				{
+					cout << "Nu se poate deschide fisierul" << numeFisier << endl;
+				}
+				else {
+					string den;
+					int nr = 0;
+					int nr2 = 0;
+					int c = 0;
+					while (ip.good())
+					{
+						c++;
+						nr = 0;
+
+						Rand rand;
+						rand.setNrColoane(vector_tabele[i].getNrColoane());
+						char** elemente = new char* [vector_tabele[i].getNrColoane()];
+						for (int j = 0; j < vector_tabele[i].getNrColoane(); j++)
+						{
+							getline(ip, den, ',');
+
+							elemente[nr] = new char[den.length() + 1];
+							strcpy(elemente[nr], den.c_str());
+							nr++;
+							nr2++;
+						}
+						if (nr != vector_tabele[i].getNrColoane())
+						{
+
+							ok = false;
+							break;
+						}
+						else
+						{
+							rand.setElemente(elemente, nr);
+
+							vector_tabele[i] = vector_tabele[i] + rand;
+						}
+
+
+					}
+					if (c * vector_tabele[i].getNrColoane() != nr2)
+					{
+						cout << "Numarul de elemente de pe o linie nu corespunde ";
+						ok = false;
+					}
+				}
+
+			}
+		}
+		if (gasit == false)
+		{
+
+			cout << "Nu exista tabelul cu denumirea" << denumireTabela << endl;
+		}
+		else
+		{
+
+			if (ok == true)
+			{
+				setVectorTabele(vector_tabele, nr_tabele);
+			}
+
+		}
+
+	}
+
+
+	void selectAll(string denumireTabela)
+	{
+		Tabela* vector_tabele = getVectorTabele();
+		int nr_tabele = getNrTabele();
+		bool ok = true;
+		bool gasit = false;
+		ofstream f;
+		f.open("SELECT_1.txt");
+		for (int i = 0; i < nr_tabele; i++)
+		{
+
+			if (denumireTabela == vector_tabele[i].getDenumire())
+			{
+				gasit = true;
+				for (int j = 0; j < vector_tabele[i].getNrColoane(); j++)
+				{
+					cout << vector_tabele[i].getColoane()[j].getDenumire() << " ";
+
+				}
+				cout << endl;
+				for (int j = 0; j < vector_tabele[i].getNrRanduri(); j++)
+				{
+					cout << vector_tabele[i].getRand(j);
+					/*Rand rand = vector_tabele[i].getRand(j);
+					f << rand;*/
+				}
+
+
+			}
+		}
+		if (gasit == false)
+		{
+			cout << "Nu am gasit tabelul cu denumirea " << denumireTabela;
+		}
+	}
+	void SELECT(string denumireTabela, char** coloane, int nr)
+	{
+
+		Tabela* vector_tabele = getVectorTabele();
+		int nr_tabele = getNrTabele();
+		bool ok = true;
+		bool gasit = false;
+		for (int i = 0; i < nr_tabele; i++)
+		{
+
+			if (denumireTabela == vector_tabele[i].getDenumire())
+			{
+				gasit = true;
+
+				for (int j = 0; j < nr; j++)
+				{
+					if (vector_tabele[i].verificaColoana(coloane[j]) == -1)
+					{
+						cout << "Coloana " << coloane[j] << " nu exista";
+						ok = false;
+						break;
+					}
+				}
+				if (ok == true)
+				{
+					for (int j = 0; j < nr; j++)
+					{
+						vector_tabele[i].select(coloane[j]);
+					}
+
+				}
+
+
+			}
+		}
+		if (gasit == false)
+		{
+			cout << "Nu am gasit tabelul cu denumirea " << denumireTabela;
 		}
 	}
 	void INSERT_INTO(string denumireTabela, Rand rand)
@@ -2235,10 +2700,13 @@ public:
 				if (rand.getNrColoane() == vector_tabele[i].getNrColoane())
 				{
 
-					vector_tabele[i].insereazaRand(rand);
+					vector_tabele[i] = vector_tabele[i] + (rand);
+
+					vector_tabele[i].serializare();
 					gasit = true;
 					cout << "Am introdus un rand cu succes in tabela :" << denumireTabela;
 					setVectorTabele(vector_tabele, nr_tabele);
+
 					break;
 				}
 				else
@@ -2275,7 +2743,7 @@ public:
 			cout << "Nu am gasit tabelul cu denumirea " << denumireTabela;
 		}
 	}
-	void SELECT(string denumire, char** conditie, int dim)
+	void SELECT(string denumire, char** conditie, int dim, int c)
 	{
 		//SELECT (cel_putin_o_coloana, ...) | ALL FROM nume_tabela [WHERE nume_coloană = valoare] - clauza WHERE este opțională
 
@@ -2318,13 +2786,18 @@ public:
 				}
 				if (index != -1)
 				{
-					for (int k = 0; k < vector_tabele[i].getNrRanduri(); i++)
+
+					for (int k = 0; k < vector_tabele[i].getNrRanduri(); k++)
 					{
+
 						if (val1 == vector_tabele[i].getRand(k).elementPozitie(index))
 						{
-							vector_tabele[i].getRand(k).setElementPozitie(index, val2);
+
+							vector_tabele[i].setRand(k, vector_tabele[i].getRand(k).setElementPozitie(index, val2));
+
 						}
 					}
+					vector_tabele[i].serializare();
 					setVectorTabele(vector_tabele, nr_tabele);
 					cout << "Update facut cu succes";
 
@@ -2486,12 +2959,12 @@ public:
 
 
 			}
-			else if ((dis == elemente[0]) && (dim == 2))
+			else if ((dis == elemente[0]) && (dim == 3) && (terminal == elemente[2]))
 			{
 				string de = elemente[1];
 				DISPLAY(de);
 			}
-			else if ((drop == elemente[0]) && (dim == 2))
+			else if ((drop == elemente[0]) && (dim == 3) && (terminal == elemente[2]))
 			{
 				string de = elemente[1];
 				DROP(de);
@@ -2519,7 +2992,7 @@ public:
 		bool gasit = false;
 		for (int i = 0; i < nr_tabele; i++)
 		{
-			if (vector_tabele[i].getDenumire() == denumire)
+			if (strcmp(vector_tabele[i].getDenumire(), denumire) == 0)
 			{
 				gasit = true;
 				break;
@@ -2547,11 +3020,20 @@ public:
 				vector_tabele[nr_tabele - 1] = tabel;
 			}
 			setVectorTabele(vector_tabele, nr_tabele);
+			string x = denumire;
+			ofstream h;
+			h.open("Configurari/" + x + ".txt");
+			h << tabel;
+			h.close();
+			h.open("Tabele.txt", ios::app);
+			h << denumire << endl;
+
+			h.close();
 			cout << "Tabelul a fost creat cu succes " << endl;
 		}
 		else
 		{
-			cout << "Denumirea tabelului exista deja in BD";
+			cout << "Denumirea tabelului " + string(denumire) + " exista deja in BD" << endl;
 		}
 	}
 
@@ -2560,17 +3042,18 @@ public:
 		//DROP TABLE table_name
 
 		Tabela* vector_tabele = getVectorTabele();
-
+		char* den = new char[denumire.length() + 1];
+		strcpy(den, denumire.c_str());
 		int nr_tabele = getNrTabele();
 		int nr_copie = nr_tabele - 1;
 		Tabela* copie = new Tabela[nr_copie];
 		bool gasit = false;
 		for (int i = 0; i < nr_tabele; i++)
 		{
-			if (denumire == vector_tabele[i].getDenumire())
+			if (strcmp(den, vector_tabele[i].getDenumire()) == 0)
 			{
 
-				vector_tabele[i];
+
 				gasit = true;
 			}
 			else
@@ -2585,6 +3068,39 @@ public:
 		}
 		else
 		{
+			string d = "Tabele.txt";
+			char* x = new char[d.length() + 1];
+			strcpy(x, d.c_str());
+			string denumireConfigurare = "Configurari/" + denumire + ".txt";
+			char* y = new char[denumireConfigurare.length() + 1];
+			strcpy(y, denumireConfigurare.c_str());
+			string denumireDetalii = "Detalii/" + denumire + ".bin";
+			char* z = new char[denumireDetalii.length() + 1];
+			strcpy(z, denumireDetalii.c_str());
+			if (remove(x) != 0)
+				cout << "";
+			else
+				if (remove(y) != 0)
+					cout << "";
+				else
+					cout << "";
+			if (remove(z) != 0)
+				cout << "";
+			else
+				cout << "";
+
+
+
+			ofstream h("Tabele.txt");
+			for (int i = 0; i < nr_tabele; i++)
+			{
+				if (strcmp(den, vector_tabele[i].getDenumire()) != 0)
+				{
+					h << vector_tabele[i].getDenumire() << endl;
+				}
+			}
+
+			h.close();
 			setVectorTabele(copie, nr_copie);
 		}
 	}
@@ -2629,3 +3145,104 @@ public:
 
 	}
 };
+
+
+class GestioneazaFisiere
+{
+private:
+	static string detalii;
+	static string configurari;
+	Tabela* vector_tabele;
+	int nr_tabele;
+
+public:
+
+	bool is_file_exist(string fileName)
+	{
+		std::ifstream infile(fileName);
+		return infile.good();
+	}
+	void getTabele()
+	{
+		ifstream f;
+		string line;
+		int number_of_lines = 0;
+		ifstream myfile("Tabele.txt");
+		while (getline(myfile, line))
+			++number_of_lines;
+		myfile.close();
+		f.open("Tabele.txt");
+		if (number_of_lines == 0)
+		{
+			cout << "Nu exista tabele pentru incarcare" << endl;
+		}
+		else
+		{
+			Tabela* vectorTabele = new Tabela[number_of_lines];
+			int nr = 0;
+			string denumire;
+			string str;
+			f >> ws;
+			while (getline(f, str))
+			{
+
+				cout << "Incarcam tabelul " << str << endl;
+				Tabela tabel = configurariTabel(str);
+				string denSer = "Detalii/" + str + ".bin";
+				if (is_file_exist(denSer))
+				{
+
+					tabel.deserializare();
+					vectorTabele[nr] = tabel;
+					nr++;
+				}
+				else {
+					vectorTabele[nr] = tabel;
+					nr++;
+				}
+
+				f >> ws;
+			}
+			f.close();
+			this->vector_tabele = vectorTabele;
+			this->nr_tabele = nr;
+		}
+
+	}
+	Tabela configurariTabel(string str)
+	{
+		ifstream h;
+		char* den = new char[str.length() + 1];
+		char* denNou;
+		strcpy_s(den, str.length() + 1, str.c_str());
+
+		if (den[strlen(den) - 1] == ' ')
+		{
+			den[strlen(den) - 1] = '\0';
+		}
+
+		string denum = den;
+		string denumire = denum + ".txt";
+
+		string locatieFISIER = configurari + denumire;
+		h.open(locatieFISIER);
+
+		Tabela tab;
+		h >> tab;
+
+		h.close();
+		return tab;
+	}
+	Tabela* getVectorTabele()
+	{
+		return vector_tabele;
+	}
+	int getNrTabele()
+	{
+		return nr_tabele;
+	}
+
+};
+
+string GestioneazaFisiere::detalii = "Detalii/";
+string GestioneazaFisiere::configurari = "Configurari/";
