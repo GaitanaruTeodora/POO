@@ -1,0 +1,11 @@
+SCOALA
+2
+ID
+2
+2
+1
+DENUMIRE
+10
+1
+NR10
+0

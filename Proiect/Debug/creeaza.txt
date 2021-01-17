@@ -1,2 +1,4 @@
-CREATE TABLE PERSOANA ( ( ID , 2, 22, D ) , (NUME , 3 , 3 , D ) ) ;
+CREATE TABLE PERSOANA ( ( ID , 2, 2,D ) , (NUME , 3 , 3 , D ) )) ;
 CREATE TABLE STUDENT ( ( ID , 2, 22, D )  ) ;
+CREATE TABLE CLASA ( ( ID , 2, 2, D  ) ) ;
+CREATE TABLE SCOALA ( ( ID , 2, 2, 1 ) , (DENUMIRE , 1, 10, NR10 ) ) ;

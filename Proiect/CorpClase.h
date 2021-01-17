@@ -5,6 +5,11 @@
 #include <string>
 #include <fstream>
 #include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <set>
+
 using namespace std;
 
 enum tipColoana { tip_text = 1, tip_integer = 2, tip_float = 3 };
@@ -18,21 +23,17 @@ private:
 	tipColoana tip;
 
 public:
-
-
 	Coloana()
 	{
 		nume_coloana = new char[9];
 		strcpy_s(nume_coloana, 9, "DEFAULT");
 		valoareImplicita = new char[9];
 		strcpy_s(nume_coloana, 9, "IMPLICIT");
-
 		lungime_coloana = 0;
 		tip = (tipColoana)1;
 	}
 	Coloana(char* nume_coloana, int lungime_coloana = 255)
 	{
-
 		this->nume_coloana = new char[strlen(nume_coloana) + 1];
 		strcpy_s(this->nume_coloana, strlen(nume_coloana) + 1, nume_coloana);
 		this->lungime_coloana = lungime_coloana;
@@ -45,11 +46,9 @@ public:
 		this->valoareImplicita = new char[strlen(valoareImplicita) + 1];
 		strcpy_s(this->valoareImplicita, strlen(valoareImplicita) + 1, valoareImplicita);
 		this->tip = tip;
-
 	}
 	Coloana(const Coloana& c)
 	{
-
 		this->lungime_coloana = c.lungime_coloana;
 		this->nume_coloana = new char[strlen(c.nume_coloana) + 1];
 		strcpy_s(this->nume_coloana, strlen(c.nume_coloana) + 1, c.nume_coloana);
@@ -72,24 +71,19 @@ public:
 		this->nume_coloana = new char[strlen(c.nume_coloana) + 1];
 		strcpy_s(this->nume_coloana, strlen(c.nume_coloana) + 1, c.nume_coloana);
 		this->tip = c.tip;
-
 		this->valoareImplicita = new char[strlen(c.valoareImplicita) + 1];
-
-
 		strcpy_s(this->valoareImplicita, strlen(c.valoareImplicita) + 1, c.valoareImplicita);
 
 		return *this;
 	}
 	bool operator == (const Coloana& c)
 	{
-
 		if (strcmp(this->nume_coloana, c.nume_coloana) != 0 || strcmp(this->valoareImplicita, c.valoareImplicita) != 0 || this->lungime_coloana != c.lungime_coloana || this->tip != tip)
 		{
 			return false;
 		}
 		return true;
 	}
-
 	bool operator <= (const Coloana& c)
 	{
 		return (this->lungime_coloana <= c.lungime_coloana);
@@ -119,11 +113,13 @@ public:
 	}
 	Coloana operator++()
 	{
-
 		this->lungime_coloana++;
 		return *this;
 	}
-
+	explicit operator char*()
+	{
+		return nume_coloana;
+	}
 	~Coloana()
 	{
 		if (this->nume_coloana != nullptr)
@@ -147,7 +143,6 @@ public:
 	}
 	void setNumeColoana(char* nume_coloana)
 	{
-
 		this->nume_coloana = new char[strlen(nume_coloana) + 1];
 		strcpy_s(this->nume_coloana, strlen(nume_coloana) + 1, nume_coloana);
 	}
@@ -186,10 +181,7 @@ public:
 	{
 		this->lungime_coloana = lungimeColoana;
 	}
-	explicit operator char* ()
-	{
-		return nume_coloana;
-	}
+	
 	bool setTipColoana(char* tip)
 	{
 
@@ -265,15 +257,12 @@ istream& operator>>(istream& in, Coloana& c)
 	{
 		c.lungime_coloana = (int)lungime;
 		verificComanda = true;
-
 	}
 	else
 	{
 		cout << "Lungimea trebuie sa fie numar intreg ";
 		c.lungime_coloana = 0;
-
 	}
-
 	cout << "Nume coloana: ";
 	string buffer;
 	in >> buffer;
@@ -285,7 +274,7 @@ istream& operator>>(istream& in, Coloana& c)
 	strcpy_s(c.nume_coloana, buffer.length() + 1, buffer.c_str());
 
 	string buffer2;
-	cout << "Valoare implicita : ";
+	cout << "Valoare implicita: ";
 	in >> buffer2;
 	if (c.valoareImplicita != nullptr)
 	{
@@ -294,8 +283,7 @@ istream& operator>>(istream& in, Coloana& c)
 	c.valoareImplicita = new char[buffer2.length() + 1];
 	strcpy_s(c.valoareImplicita, buffer2.length() + 1, buffer2.c_str());
 
-
-	cout << "Tipul coloanei";
+	cout << "Tipul coloanei: ";
 	char buffer3[20];
 	in >> buffer3;
 
@@ -310,12 +298,10 @@ istream& operator>>(istream& in, Coloana& c)
 		{
 			tipColoana tipNou = (tipColoana)(x[0]);
 			c.tip = tipNou;
-
-
 		}
 		else
 		{
-			cout << "Valoare unui tip este intre 1 si 3";
+			cout << "Valoarea unui tip este intre 1 si 3";
 			tipColoana tipNou = (tipColoana)(1);
 			c.tip = tipNou;
 		}
@@ -325,9 +311,9 @@ istream& operator>>(istream& in, Coloana& c)
 	{
 		cout << "Tipul  trebuie sa fie un numar  intreg intre 1 si 3";
 	}
-
 	return in;
 }
+
 ostream& operator<<(ostream& out, Coloana c)
 {
 
@@ -337,16 +323,16 @@ ostream& operator<<(ostream& out, Coloana c)
 		out << c.nume_coloana << endl;
 	}
 	out << "Lungimea coloanei: " << c.lungime_coloana << endl;
+	
 	out << "Valoarea implicita: ";
 	if (c.valoareImplicita != nullptr)
 	{
 		out << c.valoareImplicita << endl;
 
 	}
-	/*out << "Tip coloana " << c.tip;*/
+	out << "Tip coloana " << c.tip;
 	return out;
 }
-
 
 class Rand
 {
@@ -354,25 +340,10 @@ private:
 	int nr_coloane;
 	char** elemente;
 
-public:
+public: 
+	    
 
-	void setNrColoane(int nr_coloane)
-	{
-		this->nr_coloane = nr_coloane;
-	}
-	void setElemente(char** elemente, int nr_coloane)
-	{
-		this->nr_coloane = nr_coloane;
-		delete[]this->elemente;
 
-		this->elemente = new char* [nr_coloane];
-		for (int i = 0; i < nr_coloane; i++)
-		{
-			this->elemente[i] = new char[strlen(elemente[i]) + 1];
-			strcpy(this->elemente[i], elemente[i]);
-
-		}
-	}
 	Rand()
 	{
 		elemente = nullptr;
@@ -386,7 +357,6 @@ public:
 		{
 			this->elemente[i] = elemente[i];
 		}
-
 	}
 	Rand(int nr_coloane)
 	{
@@ -417,6 +387,21 @@ public:
 		}
 
 		return *this;
+	}
+	bool operator < (const Rand& r)
+	{
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			if (elemente[i] < r.elemente[i])
+			{
+				return true;
+			}
+			if (elemente[i] > r.elemente[i])
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	char* operator[](int index)
 	{
@@ -450,7 +435,6 @@ public:
 			return copie;
 		}
 	}
-
 	explicit operator int()
 	{
 		return nr_coloane;
@@ -483,6 +467,23 @@ public:
 	{
 		delete[] elemente;
 	}
+	void setNrColoane(int nr_coloane)
+	{
+		this->nr_coloane = nr_coloane;
+	}
+	void setElemente(char** elemente, int nr_coloane)
+	{
+		this->nr_coloane = nr_coloane;
+		delete[]this->elemente;
+
+		this->elemente = new char* [nr_coloane];
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			this->elemente[i] = new char[strlen(elemente[i]) + 1];
+			strcpy(this->elemente[i], elemente[i]);
+
+		}
+	}
 	int getNrColoane()
 	{
 		return nr_coloane;
@@ -493,25 +494,23 @@ public:
 	}
 	Rand setElementPozitie(int index, string val)
 	{
-		/*cout << "Trebuie sa pui val " << val << endl;
-		cout << "in loc de " << elemente[index] << endl;*/
+		
 		char* x = new char[val.length() + 1];
 		strcpy_s(x, val.length() + 1, val.c_str());
 		elemente[index] = new char[strlen(x) + 1];
 		strcpy_s(elemente[index], strlen(x) + 1, x);
-		/*cout << "acum e " << elemente[index] << endl;*/
+		
 		return *this;
 
 	}
 
 	friend ostream& operator<<(ostream&, Rand);
 	friend istream& operator>>(istream&, Rand&);
-	friend ofstream& operator <<(ofstream&, Rand);
+	friend ofstream& operator<<(ofstream&, Rand);
 };
 
 ostream& operator << (ostream& out, Rand r)
 {
-
 	for (int i = 0; i < r.getNrColoane(); i++)
 	{
 		cout << r.elemente[i] << " ";
@@ -520,11 +519,9 @@ ostream& operator << (ostream& out, Rand r)
 	return out;
 }
 
-
 istream& operator >> (istream& in, Rand& r)
 {
-
-	cout << "Numar coloane";
+	cout << "Numar coloane: ";
 	char lungime[200];
 	bool ok = true;
 	in >> r.nr_coloane;
@@ -593,8 +590,74 @@ private:
 	static string denumire_BD;
 	const int numarMaximColoane;
 	int lungimiColoane[20];
+	int numberOfBytes ;
 
 public:
+	bool verificaNumar(char* element)
+	{
+		for (int i = 0; i < strlen(element); i++)
+		{
+			if (!isdigit(element[i]))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	Rand inlocuiesteValoareaImplicita(Rand rand)
+	{
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			Coloana coloanaActuala = coloane[i];
+			if (strcmp(rand.elementPozitie(i), " ") == 0)
+			{
+				rand.setElementPozitie(i, coloanaActuala.getValoareImplicita());
+			}
+		}
+		return rand;
+
+	}
+	int verificaRestrictii(Rand rand)
+	{
+		int ok = 0;
+		for (int i = 0; i < nr_coloane; i++)
+		{
+			Coloana coloanaActuala = coloane[i];
+			char* element = rand.elementPozitie(i);
+			if (strlen(element) > coloanaActuala.getLungimeColoana())
+			{
+				
+				cout << "Coloana " << coloanaActuala.getDenumire() << " are lungimea maxima " << coloanaActuala.getLungimeColoana() << ". Dimensiunea elementului " << element << " depaseste aceasta conditie" << endl;
+				return 1;
+			}
+			if (coloanaActuala.getTipColoana() == 1)
+				{
+				if (verificaNumar(element) == true)
+				{
+					cout << "Elementul " << element << " nu este de tip text";
+					return 1;
+				}
+
+			}
+			else if (coloanaActuala.getTipColoana() == 2)
+			{
+				if (verificaNumar(element) == false)
+				{
+					cout << "Elementul " << element << " nu este de tip integer";
+					return 1;
+				}
+			}
+			else if (coloanaActuala.getTipColoana() == 3)
+			{
+				if (verificaNumar(element) == false)
+				{
+					cout << "Elementul " << element << " nu este de tip float";
+					return 1;
+				}
+			}
+		}
+		return 0;
+	}
 	Tabela() :numarMaximColoane(20)
 	{
 		randuri = nullptr;
@@ -714,15 +777,18 @@ public:
 			{
 				int lenght = strlen(randuri[i].elementPozitie(j));
 				f.write((char*)&lenght, sizeof(lenght));
-				f.write((char*)randuri[i].elementPozitie(j), sizeof(randuri[i].elementPozitie(j)));
+				f.write((char*)randuri[i].elementPozitie(j), lenght+1);
 				/*	cout << "am serializat" << randuri[i].elementPozitie(j) << endl;*/
 
 			}
 
 		}
 
-
 		f.close();
+	}
+	int getNumberOfBytes()
+	{
+		return numberOfBytes;
 	}
 	void deserializare()
 	{
@@ -731,13 +797,12 @@ public:
 
 		int length = 0;
 		f.read((char*)&nr_randuri, sizeof(nr_randuri));
-		//citirea se face in aceeasi ordina ca scrierea
+		
 
 	/*	cout << "Deserializare nr randuri " << nr_randuri << endl;*/
 		randuri = new Rand[nr_randuri];
 		randuri->setNrColoane(nr_coloane);
 		/*cout << "Deserializare nr COLOANE " << nr_coloane << endl;*/
-
 
 		for (int i = 0; i < nr_randuri; i++)
 		{
@@ -750,20 +815,15 @@ public:
 				el[nr] = new char[length + 1];
 
 
-				f.read((char*)el[nr], sizeof(el[nr]));
+				f.read((char*)el[nr], length+1);
 
 				nr++;
 			}
-
 			randuri[i].setElemente(el, nr_coloane);
-
-
-
 		}
-
-
 		f.close();
 	}
+
 	Tabela& operator = (const Tabela& t)
 	{
 		this->denumire_tabela = new char[strlen(t.denumire_tabela) + 1];
@@ -989,16 +1049,29 @@ public:
 		}
 		int nr = 0;
 
-		Rand* randNou = new Rand[nr];
-		for (int i = 0; i < nr_randuri; i++)
+		
+		if (nr_randuri == 1)
 		{
-			if (valoare != randuri[i].elementPozitie(pozitie))
-			{
-				randNou[i] = randuri[i];
-			}
+			nr_randuri = 0;
+			delete[]randuri;
 		}
-		delete[]randuri;
-		this->randuri = randNou;
+		else
+		{
+			
+			/*Rand* randNou = new Rand[nr_randuri-1];
+			for (int i = 0; i < nr_randuri; i++)
+			{
+				if (valoare != randuri[i].elementPozitie(pozitie))
+				{
+					randNou[nr] = randuri[i];
+					nr++;
+				}
+			}
+			delete[]randuri;
+			nr_randuri = nr_randuri - 1;
+			this->randuri = randNou;*/
+		}
+		
 	}
 	void insereazaRand(Rand rand)
 	{
@@ -1040,6 +1113,10 @@ public:
 		Coloana* copie = coloane;
 		nr_coloane++;
 	}
+	void setNumberOfBytes(int nr)
+	{
+		numberOfBytes = nr;
+	}
 	friend ofstream& operator << (ofstream&, Tabela);
 	friend ostream& operator<<(ostream&, Tabela);
 	friend istream& operator>>(istream&, Tabela&);
@@ -1049,11 +1126,13 @@ public:
 string Tabela::denumire_BD = "Database";
 ifstream& operator>>(ifstream& in, Tabela& t)
 {
+	int nrOfBytes = 0;
 	string buffer, buffer1, buffer2, buffer3, buffer4;
 	in >> ws;
 	getline(in, buffer);
 
 	t.denumire_tabela = new char[buffer.length() + 1];
+	nrOfBytes = nrOfBytes + buffer.length()+2;
 	strcpy_s(t.denumire_tabela, buffer.length() + 1, buffer.c_str());
 
 	in >> ws;
@@ -1061,13 +1140,13 @@ ifstream& operator>>(ifstream& in, Tabela& t)
 
 
 	t.nr_coloane = atoi(buffer.c_str());
-
+	nrOfBytes = nrOfBytes + buffer.length() + 2;
 	t.coloane = new Coloana[t.nr_coloane];
 	for (int i = 0; i < t.nr_coloane; i++)
 	{
 		in >> ws;
 		getline(in, buffer1);
-
+		nrOfBytes = nrOfBytes + buffer1.length() + 1;
 		char* numeColoana = new char[buffer1.length() + 1];
 		strcpy_s(numeColoana, buffer1.length() + 1, buffer1.c_str());
 
@@ -1076,25 +1155,26 @@ ifstream& operator>>(ifstream& in, Tabela& t)
 		in >> ws;
 
 		getline(in, buffer2);
-
+		nrOfBytes = nrOfBytes + buffer2.length() +2;
 		char* tipColoana = new char[buffer2.length() + 1];
 		strcpy(tipColoana, buffer2.c_str());
 		t.coloane[i].setTipColoana(tipColoana);
 		in >> ws;
 		getline(in, buffer3);
-
+		nrOfBytes = nrOfBytes + buffer3.length() + 2;
 		char* lungimeColoana = new char[buffer3.length() + 1];
 		strcpy(lungimeColoana, buffer3.c_str());
 		t.coloane[i].setLungimeColoana(lungimeColoana);
 		in >> ws;
 		getline(in, buffer4);
-
+		nrOfBytes = nrOfBytes + buffer4.length() + 2;
 		char* valoareImplicita = new char[buffer4.length() + 1];
 		strcpy(valoareImplicita, buffer4.c_str());
 		t.coloane[i].setValoareImplicita(valoareImplicita);
 
 
 	}
+	t.numberOfBytes = nrOfBytes;
 	return in;
 }
 ofstream& operator << (ofstream& out, Tabela t)
@@ -1104,8 +1184,8 @@ ofstream& operator << (ofstream& out, Tabela t)
 	for (int i = 0; i < t.nr_coloane; i++)
 	{
 		out << t.coloane[i].getDenumire() << endl;
-		out << t.coloane[i].getLungimeColoana() << endl;
 		out << t.coloane[i].getTipColoana() << endl;
+		out << t.coloane[i].getLungimeColoana() << endl;
 		out << t.coloane[i].getValoareImplicita() << endl;
 	}
 	out << t.nr_randuri << endl;
@@ -1115,7 +1195,7 @@ ofstream& operator << (ofstream& out, Tabela t)
 ostream& operator << (ostream& out, Tabela t)
 {
 	out << "Denumire tabela: " << t.denumire_tabela << endl;
-	out << "Coloane: ";
+	
 	for (int i = 0; i < t.nr_coloane; i++)
 	{
 		out << t.coloane[i] << " ";
@@ -1230,7 +1310,7 @@ public:
 	{
 		return nr_tabele > 0;
 	}
-	Comenzi operator++(int i)
+	/*Comenzi operator++(int i)
 	{
 		Comenzi copie = *this;
 		delete[]copie.vector_tabele;
@@ -1258,7 +1338,7 @@ public:
 		}
 		copie.vector_tabele[copie.nr_tabele - 1] = tabela;
 		return copie;
-	}
+	}*/
 	explicit operator int()
 	{
 		return nr_tabele;
@@ -1700,15 +1780,41 @@ public:
 			this->elemente[i] = v[i];
 		}
 
-
+		litereMari();
 		desparteC(';');
-		desparteC('=');
-		desparteVirgule();
 		eliminaParanteze();
+	
+		
+		desparteVirgule();
+		desparteC('=');
+
+		
+		
 
 		/*parseazaComanda();*/
 	}
+	
+	void litereMari()
+	{
+		char** copie = new char* [dim];
+		for (int i = 0; i < dim; i++)
+		{
+			string el = elemente[i];
+			transform(el.begin(), el.end(), el.begin(), ::toupper);
+			copie[i] = new char[el.length()];
+			strcpy(copie[i], el.c_str());
 
+		}
+		delete[]elemente;
+		elemente = new char* [dim];
+		for (int i = 0; i < dim; i++)
+		{
+			
+			elemente[i] = new char[strlen(copie[i])+1];
+			strcpy(elemente[i], copie[i]);
+
+		}
+	}
 
 	~Comenzi()
 	{
@@ -1717,12 +1823,7 @@ public:
 	}
 
 
-	virtual void parseazaComanda()
-	{
 
-
-
-	}
 
 	void desparteC(char  car)
 	{
@@ -1869,7 +1970,98 @@ public:
 		}
 		return nr;
 	}
+	void eliminaParantezeRecursiv()
+	{
+		int nrParanteze = 0;
+		for (int i = 0; i < dim; i++)
+		{
+			int pDeschisa = numaraParantezaDeschisa(elemente[i]);
+			int pInchisa = numaraParantezaInchisa(elemente[i]);
+			if (pDeschisa > 0 && elemente[i][0] == '(')
+			{
+				nrParanteze = nrParanteze + 1;
+			}
+			else if (pInchisa > 0 && elemente[i][strlen(elemente[i]) - 1] == ')')
+			{
+				nrParanteze = nrParanteze + 1;
+			}
+			
+		}
+		char** c;
+		int dimNou = dim + nrParanteze;
+		c = new char* [dimNou];
+		
+		int nr = 0; 
+		char* car;
+		char* car2;
+		car = new char[2];
+		car2 = new char[2];
+		strcpy(car, "(");
+		strcpy(car2, ")");
+		for (int i = 0; i < dim; i++)
+		{
+			char* cop = new char[strlen(elemente[i])];
+			strcpy(cop, elemente[i]);
+			if (strlen(cop) > 1)
+			{
+				if (cop[0] == '(')
+				{
+					c[nr] = new char[strlen(car)];
+					strcpy(c[nr], car);
+					nr++;
+					char* el = new char[strlen(cop) - 1];
+						for (int k = 1; k<strlen(cop) ; k++)
+						{ 
+							
+							el[k-1] = cop[k];
+						}
+					
+					c[nr] = new char[strlen(el)];
+					strcpy(c[nr], el);
+					nr++;
+					
+				}
+				else if (cop[strlen(cop) - 1] == ')')
+				{
+				
+					char* el = new char[strlen(cop) - 1];
+					
+					for (int k = 0; k<strlen(cop)-1; k++)
+					{
+						el[k] = cop[k];
+					}
+					
+					c[nr] = new char[strlen(el)];
+					strcpy(c[nr], el);
+					nr++;
+					c[nr] = new char[strlen(car2)];
+					strcpy(c[nr], car2);
+					nr++;
+				}
+				else
+				{
+					c[nr] = new char[strlen(cop)];
+					strcpy(c[nr], cop);
+					nr++;
+				}
+			}
+			else
+			{
+				c[nr] = new char[strlen(cop)];
+				strcpy(c[nr], cop);
+				nr++;
+			}
+		}
+		dim = nr;
+		delete[]elemente;
+		elemente = new char* [dim];
+		for (int i = 0; i < dim; i++)
+		{
+			elemente[i] = new char[strlen(c[i])];
+			strcpy(elemente[i], c[i]);
+		}
 
+	}
 	void  eliminaParanteze()
 	{
 		char** c;
@@ -2145,7 +2337,27 @@ public:
 
 
 	}
+	bool contineParanteza()
+	{
+		char paranteza1 ='(';
+		char paranteza2 =')';
+		for (int i = 0; i < dim; i++)
+		{
+			if (strlen(elemente[i]) > 1)
+			{
+				for (int j = 0; j < strlen(elemente[i]); j++)
+				{
+					if (paranteza1 == elemente[i][j] || paranteza2 == elemente[i][j])
+					{
+						return true;
+					}
+				}
+			}
+			
+		}
+		return false;
 
+	}
 	void desparteVirgule()
 	{
 		int  nrVirgule = 0;
@@ -2242,14 +2454,9 @@ public:
 		}
 	}
 
-
-	void afiseazaComanda()
-	{
-		for (int i = 0; i < dim; i++)
-		{
-			cout << elemente[i] << endl;
-		}
-	}
+	virtual void parseazaComanda() = 0;
+	virtual void afiseazaComanda() = 0;
+	
 
 
 	void display(string denumire)
@@ -2323,16 +2530,16 @@ istream& operator >>(istream& in, Comenzi& c)
 	}
 	return in;
 }
-ostream& operator << (ostream& out, Comenzi c)
-{
-	cout << "Numar tabele : " << endl;
-	out << c.nr_tabele << endl;
-	for (int i = 0; i < c.nr_tabele; i++)
-	{
-		out << c.vector_tabele[i];
-	}
-	return out;
-}
+//ostream& operator << (ostream& out, Comenzi c)
+//{
+//	cout << "Numar tabele : " << endl;
+//	out << c.nr_tabele << endl;
+//	for (int i = 0; i < c.nr_tabele; i++)
+//	{
+//		out << c.vector_tabele[i];
+//	}
+//	return out;
+//}
 
 class Comenzi_DML : virtual public Comenzi
 {
@@ -2342,6 +2549,7 @@ public:
 	{
 
 	}
+	
 
 	bool verificaNumeTabel(char* denumire)
 	{
@@ -2625,18 +2833,26 @@ public:
 				for (int j = 0; j < vector_tabele[i].getNrColoane(); j++)
 				{
 					cout << vector_tabele[i].getColoane()[j].getDenumire() << " ";
-
+					f << vector_tabele[i].getColoane()[j].getDenumire() << " ";
 				}
 				cout << endl;
+				f << endl;
 				for (int j = 0; j < vector_tabele[i].getNrRanduri(); j++)
 				{
 					cout << vector_tabele[i].getRand(j);
 					/*Rand rand = vector_tabele[i].getRand(j);
 					f << rand;*/
+					Rand rand = vector_tabele[i].getRand(j);
+					for (int k = 0; k < rand.getNrColoane(); k++)
+					{
+						f << rand.elementPozitie(k)<<endl;
+					}
+					
 				}
 
 
 			}
+			f.close();
 		}
 		if (gasit == false)
 		{
@@ -2696,22 +2912,28 @@ public:
 
 			if (denumireTabela == vector_tabele[i].getDenumire())
 			{
-
+				gasit = true;
 				if (rand.getNrColoane() == vector_tabele[i].getNrColoane())
 				{
+					vector_tabele[i].inlocuiesteValoareaImplicita(rand);
+					if ( vector_tabele[i].verificaRestrictii(rand) == 0)
+					{
+						vector_tabele[i] = vector_tabele[i] + (rand);
 
-					vector_tabele[i] = vector_tabele[i] + (rand);
+						vector_tabele[i].serializare();
+						
+						cout << "Am introdus un rand cu succes in tabela :" << denumireTabela;
+						setVectorTabele(vector_tabele, nr_tabele);
+						
+				}
+					
+					
 
-					vector_tabele[i].serializare();
-					gasit = true;
-					cout << "Am introdus un rand cu succes in tabela :" << denumireTabela;
-					setVectorTabele(vector_tabele, nr_tabele);
-
-					break;
+				
 				}
 				else
 				{
-					cout << "Tabela " << denumireTabela << "accepta " << vector_tabele[i].getNrColoane() << " elemente in rand";
+					cout << "Tabela " << denumireTabela << " accepta " << vector_tabele[i].getNrColoane() << " elemente in rand";
 				}
 
 			}
@@ -2741,6 +2963,10 @@ public:
 		if (gasit == false)
 		{
 			cout << "Nu am gasit tabelul cu denumirea " << denumireTabela;
+		}
+		else
+		{
+			setVectorTabele(vector_tabele, nr_tabele);
 		}
 	}
 	void SELECT(string denumire, char** conditie, int dim, int c)
@@ -2818,6 +3044,10 @@ public:
 		}
 
 	}
+	void afiseazaComanda() override
+	{
+		cout << "Comanda de tip DML" << endl;
+	}
 };
 
 class Comenzi_DDL :virtual public  Comenzi
@@ -2864,7 +3094,6 @@ public:
 		char** elemente = getElemente();
 		int dim = getDim();
 		int nr = 0;
-		//CREATE TABLE Marian
 
 		if (dim > 14 || dis == elemente[0] || drop == elemente[0])
 		{
@@ -2885,11 +3114,8 @@ public:
 
 						if (j == 4)
 						{
-
-
 							if ((parantezaDeschisa == elemente[j]) && (parantezaInchisa == elemente[j + 8]) && (virgula == elemente[j + 2]) && (virgula == elemente[j + 4]) && (virgula == elemente[j + 6]))
 							{
-
 
 								if ((coloane[nr].setLungimeColoana(elemente[j + 5]) == true) && (coloane[nr].setTipColoana(elemente[j + 3]) == true))
 								{
@@ -2903,7 +3129,7 @@ public:
 								}
 								else
 								{
-									cout << "Comanda gresita AICI !";
+									cout << "Comanda gresita !";
 									verifica = false;
 									break;
 								}
@@ -2966,7 +3192,9 @@ public:
 			}
 			else if ((drop == elemente[0]) && (dim == 3) && (terminal == elemente[2]))
 			{
+				
 				string de = elemente[1];
+				
 				DROP(de);
 			}
 
@@ -3048,6 +3276,7 @@ public:
 		int nr_copie = nr_tabele - 1;
 		Tabela* copie = new Tabela[nr_copie];
 		bool gasit = false;
+		int nr = 0;
 		for (int i = 0; i < nr_tabele; i++)
 		{
 			if (strcmp(den, vector_tabele[i].getDenumire()) == 0)
@@ -3059,7 +3288,8 @@ public:
 			else
 
 			{
-				copie[i] = vector_tabele[i];
+				copie[nr] = vector_tabele[i];
+				nr++;
 			}
 		}
 		if (gasit == false)
@@ -3072,9 +3302,11 @@ public:
 			char* x = new char[d.length() + 1];
 			strcpy(x, d.c_str());
 			string denumireConfigurare = "Configurari/" + denumire + ".txt";
+			
 			char* y = new char[denumireConfigurare.length() + 1];
 			strcpy(y, denumireConfigurare.c_str());
 			string denumireDetalii = "Detalii/" + denumire + ".bin";
+			
 			char* z = new char[denumireDetalii.length() + 1];
 			strcpy(z, denumireDetalii.c_str());
 			if (remove(x) != 0)
@@ -3126,6 +3358,10 @@ public:
 			cout << "Nu exista tabelul cu denumirea " << denumire;
 		}
 	}
+	void afiseazaComanda() override
+	{
+		cout << "Comanda de tip DDL" << endl;
+	}
 	//CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column_name) - opțional pentru faza 1; definește un index pentru coloana column_name
 	//DROP INDEX index_name - opțional pentru faza 1. tipurile acceptate sunt text, integer, float
 };
@@ -3144,6 +3380,153 @@ public:
 	{
 
 	}
+	void afiseazaComanda() override
+	{
+		cout << "Comanda de tip DML si DDL" << endl;
+	}
+};
+
+class Fisier
+{
+private:
+	string numeFisier;
+	string numeBinar;
+	Tabela tabela;
+	int numerOfBytes;
+public:
+	Fisier()
+	{
+
+	}
+	virtual void setNumeFisier(string numeFisier)
+	{
+		this->numeFisier = numeFisier;
+	}
+	Fisier(string numeFisier) {
+		this->numeFisier = numeFisier;
+	}
+	virtual Tabela getTabela() {
+		return tabela;
+	}
+	bool is_file_exist(string fileName)
+	{
+		std::ifstream infile(fileName);
+		return infile.good();
+	}
+	virtual void setNumeBinar(string nume)
+	{
+		numeBinar = nume;
+	}
+	string getNumeBinar()
+	{
+		return numeBinar;
+	}
+	virtual void citesteTabela()
+	{
+		ifstream h;
+		char* denumire = new char[numeFisier.length()];
+		strcpy(denumire, numeFisier.c_str());
+		Tabela copieTabela;
+		copieTabela.setDenumire(denumire);
+		
+		h.open("Configurari/"+ numeFisier);
+		h >> tabela;
+		
+		numerOfBytes = tabela.getNumberOfBytes();
+		if (is_file_exist(numeBinar))
+		{
+			
+			this->tabela.deserializare();
+			
+		}
+		h.close();
+	} 
+	virtual void afiseazaRestrictii()
+	{
+		cout << "Nu exista restrictii pentru TABELUL " << numeFisier << endl;
+	}
+	int getNumberOfB()
+	{
+		return numerOfBytes;
+	}
+	string getNumeFisier()
+	{
+		return numeFisier;
+	}
+
+};
+
+class FisierRestrictie : public Fisier
+{
+	list<string>restrictii;
+
+public:
+	FisierRestrictie()
+	{
+
+	}
+	 Tabela getTabela() override {
+		return Fisier::getTabela();
+	}
+	FisierRestrictie(string numeFisier) : Fisier(numeFisier)
+	{
+
+	}
+	void setNumeFisier(string numeFisier) override
+	{
+		Fisier::setNumeFisier(numeFisier);
+
+	}
+	void setNumeBinar(string numebinar) override
+	{
+		Fisier::setNumeBinar(numebinar);
+	}
+	void citesteTabela() override
+	{
+		Fisier::citesteTabela();
+		int numberOfBytes = getNumberOfB();
+		
+		string denumireFisier = getNumeFisier();
+		char* den = new char[denumireFisier.length()];
+		strcpy(den, denumireFisier.c_str());
+		ifstream f("Configurari/"+ denumireFisier);
+		f.seekg(numberOfBytes);
+		
+		string line;
+		while (getline(f, line))
+		{
+			
+			restrictii.push_back(line);
+		}
+	}
+	list<string> getRestrictii()
+	{
+		return restrictii;
+	}
+	void afiseazaRestrictii()
+	{
+		if (restrictii.size() < 3)
+		{
+			cout << "Nu exista restrictii pentru tabelul " << getNumeFisier() << endl;
+		}
+		else
+		{
+			cout << "Restrictii pentru tabelul :" << getNumeFisier() << endl;
+			list<string> ::iterator it ;
+			int nr = 0;
+			for (it = restrictii.begin(); it!= restrictii.end();it++,nr++)
+			{
+				if ( nr > 1)
+				cout <<"  " <<nr-1<<"."<< *it << endl;
+			}
+		}
+		
+	}
+	void afiseazaTabel()
+	{
+		cout << getTabela();
+	}
+
 };
 
 
@@ -3153,14 +3536,50 @@ private:
 	static string detalii;
 	static string configurari;
 	Tabela* vector_tabele;
+	set<string> numeFisiere;
+	
+	vector<Fisier*> fisiere;
 	int nr_tabele;
 
 public:
+
 
 	bool is_file_exist(string fileName)
 	{
 		std::ifstream infile(fileName);
 		return infile.good();
+	}
+	string compuneDenumire(string str)
+	{
+		char* den = new char[str.length() + 1];
+		char* denNou;
+		strcpy_s(den, str.length() + 1, str.c_str());
+
+		if (den[strlen(den) - 1] == ' ')
+		{
+			den[strlen(den) - 1] = '\0';
+		}
+
+		string denum = den;
+		string denumire = denum + ".txt";
+
+		return denumire;
+	}
+	string compuneDenumireBinar(string str)
+	{
+		char* den = new char[str.length() + 1];
+		char* denNou;
+		strcpy_s(den, str.length() + 1, str.c_str());
+
+		if (den[strlen(den) - 1] == ' ')
+		{
+			den[strlen(den) - 1] = '\0';
+		}
+
+		string denum = den;
+		string denumire = "Detalii/" + denum + ".bin";
+
+		return denumire;
 	}
 	void getTabele()
 	{
@@ -3183,24 +3602,45 @@ public:
 			string denumire;
 			string str;
 			f >> ws;
+			Fisier* fisierr;
 			while (getline(f, str))
 			{
 
-				cout << "Incarcam tabelul " << str << endl;
-				Tabela tabel = configurariTabel(str);
-				string denSer = "Detalii/" + str + ".bin";
-				if (is_file_exist(denSer))
+			
+				numeFisiere.insert(str);
+				bool ok = true;
+				string r = "";
+				try
 				{
-
-					tabel.deserializare();
-					vectorTabele[nr] = tabel;
-					nr++;
+					r = str.substr(str.length() - 11, str.length());
 				}
-				else {
-					vectorTabele[nr] = tabel;
-					nr++;
+				catch (exception e)
+				{
+					ok = false;
 				}
+				if (ok == true && r == "_restrictie")
+				{
+					fisierr = new FisierRestrictie();
+				}
+				else
+				{
+					fisierr = new Fisier();
+				}
+				fisierr->setNumeFisier(compuneDenumire(str));
+				string denSer = compuneDenumireBinar(str);
+				fisierr->setNumeBinar(denSer);
+				fisierr->citesteTabela();
+				
+				
+				fisiere.push_back(fisierr);
+				nr++;
 
+				/*FisierRestrictie fisier(compuneDenumire(str));
+				fisier.setNumeBinar(denSer);
+				fisier.citesteTabela();
+				cout << "Restrictii TABEL " <<str<< endl;
+				fisier.afiseazaRestrictii();*/
+				
 				f >> ws;
 			}
 			f.close();
@@ -3209,37 +3649,44 @@ public:
 		}
 
 	}
-	Tabela configurariTabel(string str)
-	{
-		ifstream h;
-		char* den = new char[str.length() + 1];
-		char* denNou;
-		strcpy_s(den, str.length() + 1, str.c_str());
-
-		if (den[strlen(den) - 1] == ' ')
-		{
-			den[strlen(den) - 1] = '\0';
-		}
-
-		string denum = den;
-		string denumire = denum + ".txt";
-
-		string locatieFISIER = configurari + denumire;
-		h.open(locatieFISIER);
-
-		Tabela tab;
-		h >> tab;
-
-		h.close();
-		return tab;
-	}
+	
 	Tabela* getVectorTabele()
 	{
+		delete[]vector_tabele;
+		vector_tabele = new Tabela[fisiere.size()];
+		for (int i = 0; i < fisiere.size(); i++)
+		{
+			
+			vector_tabele[i] = fisiere[i]->getTabela();
+		}
 		return vector_tabele;
 	}
 	int getNrTabele()
 	{
 		return nr_tabele;
+	}
+	void afiseazaNumeFisiereOrdine()
+	{
+		set<string> ::iterator it;
+		cout << endl << "Fisierele incarcate in ordine alfabetica sunt :" << endl;
+		int nr = 1;
+		for (it = numeFisiere.begin(); it != numeFisiere.end(); it++,nr++)
+		{
+			cout <<nr<<". " << *it << endl;
+			string denumire = *it + ".txt";
+			Fisier* f = cautaDupaDenumire(compuneDenumire(*it));
+			f->afiseazaRestrictii();
+		}
+	}
+	Fisier* cautaDupaDenumire(string nume)
+	{
+		for (int i = 0; i < fisiere.size(); i++)
+		{
+			if (fisiere[i]->getNumeFisier() == nume)
+			{
+				return fisiere[i];
+			}
+		}
 	}
 
 };
